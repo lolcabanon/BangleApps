@@ -22,7 +22,11 @@
     "icon": "app.png",
     "type": "app",
     "tags": "test",
-    "screenshots": [{"url":"bangle1-demo-loop-screenshot1.png"},{"url":"bangle1-demo-loop-screenshot2.png"},{"url":"bangle1-demo-loop-screenshot3.png"},{"url":"bangle1-demo-loop-screenshot4.png"}],
+    "screenshots": [
+      {"url":"bangle1-demo-loop-screenshot1.png"},
+      {"url":"bangle1-demo-loop-screenshot2.png"},
+      {"url":"bangle1-demo-loop-screenshot3.png"},
+      {"url":"bangle1-demo-loop-screenshot4.png"}],
     "supports": ["BANGLEJS2"],
     "allow_emulator": true,
     "readme": "README.md",
