@@ -37,20 +37,30 @@ const codePages = {
 /* When it's not in the codepage, try and use
 these conversions */
 const charFallbacks = {
+  "ą":"a",
+  "ā":"a",
   "č":"c",
-  "ř":"r",
-  "ő":"o",
+  "ć":"c",
   "ě":"e",
   "ę":"e",
-  "ą":"a",
+  "ē":"e",
+  "ģ":"g",
+  "i":"ī",
+  "ķ":"k",
+  "ļ":"l",
+  "ł":"l",
+  "ń":"n",
+  "ņ":"n",
+  "ő":"o",
   "ó":"o",
+  "ř":"r",
+  "ś":"s",
+  "š":"s",
+  "ū":"u",
   "ż":"z",
   "ź":"z",
-  "ń":"n",
-  "ł":"l",
-  "ś":"s",
-  "ć":"c",
-};
+  "ž":"z",
+ };
 
 /*
 timePattern / datePattern:
@@ -70,7 +80,7 @@ timePattern / datePattern:
     %S	second (00..60)
     %p	locale's equivalent of either AM or PM; blank if not known
     %P  like %p, but lower case
-*/
+*/ 
 
 var locales = {
   "en_GB": { // this is default
@@ -144,7 +154,8 @@ var locales = {
     month: "Januar,Februar,März,April,Mai,Juni,Juli,August,September,Oktober,November,Dezember",
     abday: "So,Mo,Di,Mi,Do,Fr,Sa",
     day: "Sonntag,Montag,Dienstag,Mittwoch,Donnerstag,Freitag,Samstag",
-    trans: { yes: "ja", Yes: "Ja", no: "nein", No: "Nein", ok: "ok", on: "an", off: "aus", "< Back": "< Zurück" }
+    trans: { yes: "ja", Yes: "Ja", no: "nein", No: "Nein", ok: "ok", on: "an", off: "aus", 
+			"< Back": "< Zurück", "Delete": "Löschen", "Mark Unread": "Als ungelesen markieren" }
   },
   "en_US": {
     lang: "en_US",
@@ -198,7 +209,8 @@ var locales = {
     day: "zondag,maandag,dinsdag,woensdag,donderdag,vrijdag,zaterdag",
     abmonth: "jan,feb,mrt,apr,mei,jun,jul,aug,sep,okt,nov,dec",
     month: "januari,februari,maart,april,mei,juni,juli,augustus,september,oktober,november,december",
-    trans: { yes: "ja", Yes: "Ja", no: "nee", No: "Nee", ok: "ok", on: "aan", off: "uit", "< Back": "< Terug" }
+    trans: { yes: "ja", Yes: "Ja", no: "nee", No: "Nee", ok: "ok", on: "aan", off: "uit",
+             "< Back": "< Terug", "Delete": "Verwijderen", "Mark Unread": "Markeer als ongelezen" }
   },
   "en_NL": { // English date units with Dutch number, currency and navigation units.
     lang: "en_NL",
@@ -264,12 +276,30 @@ var locales = {
     temperature: "°C",
     ampm: { 0: "fm", 1: "em" },
     timePattern: { 0: "%HH:%MM:%SS ", 1: "%HH:%MM" },
-    datePattern: { 0: "%A %B %d %Y", "1": "%Y-%m-%d" }, // söndag 1 mars 2020 //  2020-03-01
+    datePattern: { 0: "%b %d %Y", "1": "%Y-%m-%d" }, // feb 1 2020 //  2020-03-01
     abmonth: "jan,feb,mars,apr,maj,juni,juli,aug,sep,okt,nov,dec",
     month: "januari,februari,mars,april,maj,juni,juli,augusti,september,oktober,november,december",
     abday: "sön,mån,tis,ons,tors,fre,lör",
     day: "söndag,måndag,tisdag,onsdag,torsdag,fredag,lördag",
     trans: { yes: "ja", Yes: "Ja", no: "nej", No: "Nej", ok: "ok", on: "on", off: "off" }
+  },
+  "en_SE": { // Swedish localisation with English text
+    lang: "en_SE",
+    decimal_point: ",",
+    thousands_sep: ".",
+    currency_symbol: "kr",
+    int_curr_symbol: "SKR",
+    speed: 'kmh',
+    distance: { "0": "m", "1": "km" },
+    temperature: '°C',
+    ampm: { 0: "", 1: "" },
+    timePattern: { 0: "%HH:%MM:%SS ", 1: "%HH:%MM" },
+    datePattern: { 0: "%B %d %Y", "1": "%Y-%m-%d" }, // March 1 2020 //  2020-03-01
+    abmonth: "Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec",
+    month: "January,February,March,April,May,June,July,August,September,October,November,December",
+    abday: "Sun,Mon,Tue,Wed,Thu,Fri,Sat",
+    day: "Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday",
+    // No translation for english...
   },
   "en_NZ": {
     lang: "en_NZ",
@@ -316,13 +346,15 @@ var locales = {
     speed: "kmh",
     distance: { 0: "m", 1: "km" },
     temperature: "°C",
+    ampm: { 0: "", 1: "" },
     timePattern: { 0: "%HH:%MM:%SS ", 1: "%HH:%MM" },
     datePattern: { 0: "%A, %d. %B %Y", "1": "%d.%m.%y" }, // Sonntag, 1. März 2020 // 01.03.20
     abmonth: "Jän,Feb,März,Apr,Mai,Jun,Jul,Aug,Sep,Okt,Nov,Dez",
     month: "Jänner,Februar,März,April,Mai,Juni,Juli,August,September,Oktober,November,Dezember",
     abday: "So,Mo,Di,Mi,Do,Fr,Sa",
     day: "Sonntag,Montag,Dienstag,Mittwoch,Donnerstag,Freitag,Samstag",
-    trans: { yes: "ja", Yes: "Ja", no: "nein", No: "Nein", ok: "ok", on: "an", off: "aus" }
+    trans: { yes: "ja", Yes: "Ja", no: "nein", No: "Nein", ok: "ok", on: "an", off: "aus", 
+			"< Back": "< Zurück", "Delete": "Löschen", "Mark Unread": "Als ungelesen markieren" }
   },
   "en_IL": {
     lang: "en_IL",
@@ -358,7 +390,8 @@ var locales = {
     month: "enero,febrero,marzo,abril,mayo,junio,julio,agosto,septiembre,octubre,noviembre,diciembre",
     abday: "dom,lun,mar,mié,jue,vie,sáb",
     day: "domingo,lunes,martes,miércoles,jueves,viernes,sábado",
-    trans: { yes: "sí", Yes: "Sí", no: "no", No: "No", ok: "ok", on: "on", off: "off" }
+    trans: { yes: "sí", Yes: "Sí", no: "no", No: "No", ok: "ok", on: "on", off: "off",
+			"< Back": "< Atrás", "Delete": "Borrar ", "Mark Unread": "Marcar como no leído" }
   },
   "fr_BE": {
     lang: "fr_BE",
@@ -442,12 +475,12 @@ var locales = {
     distance: { "0": "m", "1": "km" },
     temperature: '°C',
     ampm: { 0: "", 1: "" },
-    timePattern: { 0: "%HH.%MM.%SS ", 1: "%HH.%MM" }, // 17.00.00  // 17.00
-    datePattern: { 0: "%A %B %d %Y", "1": "%d/%m/%Y" }, // sunnuntai 1. maaliskuuta 2020 // 1.3.2020
+    timePattern: { 0: "%HH:%MM.%SS ", 1: "%HH:%MM" }, // 17:00.00 // 17:00                 
+    datePattern: { 0: "%d %b %Y", "1": "%d/%m/%Y" }, // 1 marzo 2020 // 01/03/2020
     abmonth: "gen,feb,mar,apr,mag,giu,lug,ago,set,ott,nov,dic",
     month: "gennaio,febbraio,marzo,aprile,maggio,giugno,luglio,agosto,settembre,ottobre,novembre,dicembre",
     abday: "dom,lun,mar,mer,gio,ven,sab",
-    day: "domenica,lunedì,martedì,mercoledì,giovedì,venerdì, sabato",
+    day: "domenica,lunedì,martedì,mercoledì,giovedì,venerdì,sabato",
     trans: { yes: "sì", Yes: "Sì", no: "no", No: "No", ok: "ok", on: "on", off: "off" }
   },
   "it_IT": {
@@ -460,12 +493,12 @@ var locales = {
     distance: { "0": "m", "1": "km" },
     temperature: '°C',
     ampm: { 0: "", 1: "" },
-    timePattern: { 0: "%HH.%MM.%SS ", 1: "%HH.%MM" }, // 17.00.00  // 17.00
-    datePattern: { 0: "%A %B %d %Y", "1": "%d/%m/%Y" }, // sunnuntai 1. maaliskuuta 2020 // 1.3.2020
+    timePattern: { 0: "%HH:%MM.%SS ", 1: "%HH:%MM" }, // 17:00.00 // 17:00                 
+    datePattern: { 0: "%d %b %Y", "1": "%d/%m/%Y" }, // 1 marzo 2020 // 01/03/2020
     abmonth: "gen,feb,mar,apr,mag,giu,lug,ago,set,ott,nov,dic",
     month: "gennaio,febbraio,marzo,aprile,maggio,giugno,luglio,agosto,settembre,ottobre,novembre,dicembre",
     abday: "dom,lun,mar,mer,gio,ven,sab",
-    day: "domenica,lunedì,martedì,mercoledì,giovedì,venerdì, sabato",
+    day: "domenica,lunedì,martedì,mercoledì,giovedì,venerdì,sabato",
     trans: { yes: "sì", Yes: "Sì", no: "no", No: "No", ok: "ok", on: "on", off: "off" }
   },
   "wae_CH": {
@@ -574,7 +607,7 @@ var locales = {
     month: "leden,únor,březen,duben,květen,červen,červenec,srpen,září,říjen,listopad,prosinec",
     abday: "ne,po,út,st,čt,pá,so",
     day: "neděle,pondělí,úterý,středa,čtvrtek,pátek,sobota",
-    trans: { yes: "tak", Yes: "Tak", no: "nie", No: "Nie", ok: "ok", on: "na", off: "poza" }
+    trans: { yes: "ano", Yes: "Ano", no: "ne", No: "Ne", ok: "ok", on: "zap", off: "vyp" }
   },
   "sl_SI": {
     lang: "sl_SI",
@@ -629,6 +662,24 @@ var locales = {
     abday: "Ndz,Pon,Wt,Śr,Czw,Pt,Sob",
     day: "Niedziela,Poniedziałek,Wtorek,Środa,Czwartek,Piątek,Sobota",
     trans: { yes: "tak", Yes: "Tak", no: "nie", No: "Nie", ok: "ok", on: "on", off: "off", "< Back": "< Wstecz" }
+  },
+  "lv_LV": { // Using charfallbacks
+    lang: "lv_LV",
+    decimal_point: ",",
+    thousands_sep: " ",
+    currency_symbol: "€",
+    int_curr_symbol: "EUR",
+    speed: "kmh",
+    distance: { 0: "m", 1: "km" },
+    temperature: "°C",
+    ampm: { 0: "", 1: "" },
+    timePattern: { 0: "%HH:%MM:%SS", 1: "%HH:%MM" },
+    datePattern: { 0: "%d. %b %Y", "1": "%d.%m.%Y" }, // 1. Mar 2020 // 01.03.20
+    abmonth: "Jan,Feb,Mar,Apr,Mai,Jūn,Jūl,Aug,Sep,Okt,Nov,Dec",
+    month: "Janvāris,Februāris,Marts,Aprīlis,Maijs,Jūnijs,Jūlijs,Augusts,Septemberis,Oktobris,Novembris,Decembris",
+    abday: "Pr,Ot,Tr,Ce,Pk,Se,Sv",
+    day: "Pirmdiena,Otrdiena,Trešdiena,Ceturtdiena,Piektdiena,Sestdiena,Svētdiena",
+    trans: { yes: "jā", Yes: "Jā", no: "nē", No: "Nē", ok: "labi", on: "Ieslēgt", off: "Izslēgt", "< Back": "< Atpakaļ" }
   },
 /*,
   "he_IL": { // This won't work until we get a font - see https://github.com/espruino/BangleApps/issues/399

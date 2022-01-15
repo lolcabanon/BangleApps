@@ -1,21 +1,16 @@
-var DEBUG = true;
-var log = (message) => {
-  if (DEBUG) {
-    console.log(JSON.stringify(message));
-  }
-};
+(function () {
+  var DEBUG = false;
+  var log = (message) => {
+    if (DEBUG) {
+      console.log(JSON.stringify(message));
+    }
+  };
 
-var storedPatterns;
-var positions = [];
-var dragHandler = (position) => {
-  positions.push(position);
-
-  debounce().then(() => {
-    log(positions.length);
-
-    var CIRCLE_RADIUS = 25;
-    var CIRCLE_RADIUS_2 = CIRCLE_RADIUS * CIRCLE_RADIUS;
-
+  var storedPatterns;
+  var CIRCLE_RADIUS = 25;
+  var CIRCLE_RADIUS_2 = Math.pow(CIRCLE_RADIUS, 2);
+  var positions = [];
+  var getPattern = (positions) => {
     var circles = [
       { x: 25, y: 25, i: 0 },
       { x: 87, y: 25, i: 1 },
@@ -27,141 +22,57 @@ var dragHandler = (position) => {
       { x: 87, y: 150, i: 7 },
       { x: 150, y: 150, i: 8 },
     ];
-    var pattern = [];
-
-    var step = Math.floor(positions.length / 100) + 1;
-
-    var p, a, b, circle;
-
-    for (var i = 0; i < positions.length; i += step) {
-      p = positions[i];
-
-      circle = circles[0];
-      if (circle) {
-        a = p.x - circle.x;
-        b = p.y - circle.y;
-        if (CIRCLE_RADIUS_2 - (a * a + b * b) >= 0) {
-          pattern.push(circle.i);
-          circles.splice(0, 1);
+    return positions.reduce((pattern, p, i, arr) => {
+      var idx = circles.findIndex((c) => {
+        var dx = p.x > c.x ? p.x - c.x : c.x - p.x;
+        if (dx > CIRCLE_RADIUS) {
+          return false;
         }
-      }
-
-      circle = circles[1];
-      if (circle) {
-        a = p.x - circle.x;
-        b = p.y - circle.y;
-        if (CIRCLE_RADIUS_2 - (a * a + b * b) >= 0) {
-          pattern.push(circle.i);
-          circles.splice(1, 1);
+        var dy = p.y > c.y ? p.y - c.y : c.y - p.y;
+        if (dy > CIRCLE_RADIUS) {
+          return false;
         }
-      }
-
-      circle = circles[2];
-      if (circle) {
-        a = p.x - circle.x;
-        b = p.y - circle.y;
-        if (CIRCLE_RADIUS_2 - (a * a + b * b) >= 0) {
-          pattern.push(circle.i);
-          circles.splice(2, 1);
+        if (dx + dy <= CIRCLE_RADIUS) {
+          return true;
         }
+        return dx * dx + dy * dy <= CIRCLE_RADIUS_2;
+      });
+      if (idx >= 0) {
+        pattern += circles[idx].i;
+        circles.splice(idx, 1);
       }
-
-      circle = circles[3];
-      if (circle) {
-        a = p.x - circle.x;
-        b = p.y - circle.y;
-        if (CIRCLE_RADIUS_2 - (a * a + b * b) >= 0) {
-          pattern.push(circle.i);
-          circles.splice(3, 1);
-        }
+      if (circles.length === 0) {
+        arr.splice(1);
       }
+      return pattern;
+    }, "");
+  };
+  var dragHandler = (position) => {
+    positions.push(position);
+    if (position.b === 0 || positions.length >= 200) {
+      var pattern = getPattern(positions);
+      log(pattern);
 
-      circle = circles[4];
-      if (circle) {
-        a = p.x - circle.x;
-        b = p.y - circle.y;
-        if (CIRCLE_RADIUS_2 - (a * a + b * b) >= 0) {
-          pattern.push(circle.i);
-          circles.splice(4, 1);
-        }
-      }
-
-      circle = circles[5];
-      if (circle) {
-        a = p.x - circle.x;
-        b = p.y - circle.y;
-        if (CIRCLE_RADIUS_2 - (a * a + b * b) >= 0) {
-          pattern.push(circle.i);
-          circles.splice(5, 1);
-        }
-      }
-
-      circle = circles[6];
-      if (circle) {
-        a = p.x - circle.x;
-        b = p.y - circle.y;
-        if (CIRCLE_RADIUS_2 - (a * a + b * b) >= 0) {
-          pattern.push(circle.i);
-          circles.splice(6, 1);
-        }
-      }
-      circle = circles[7];
-      if (circle) {
-        a = p.x - circle.x;
-        b = p.y - circle.y;
-        if (CIRCLE_RADIUS_2 - (a * a + b * b) >= 0) {
-          pattern.push(circle.i);
-          circles.splice(7, 1);
-        }
-      }
-
-      circle = circles[8];
-      if (circle) {
-        a = p.x - circle.x;
-        b = p.y - circle.y;
-        if (CIRCLE_RADIUS_2 - (a * a + b * b) >= 0) {
-          pattern.push(circle.i);
-          circles.splice(8, 1);
-        }
-      }
-    }
-    positions = [];
-
-    pattern = pattern.join("");
-
-    if (pattern) {
-      if (storedPatterns[pattern]) {
-        var app = storedPatterns[pattern].app;
-        if (!!app && !!app.src) {
-          if (storedPatterns.settings) {
-            if (storedPatterns.settings.lockDisabled) {
-              Bangle.setLCDPower(true);
+      if (pattern) {
+        if (storedPatterns[pattern]) {
+          var app = storedPatterns[pattern].app;
+          if (!!app && !!app.src) {
+            if (storedPatterns.settings) {
+              if (storedPatterns.settings.lockDisabled) {
+                Bangle.setLCDPower(true);
+              }
             }
-          }
 
-          Bangle.removeListener("drag", dragHandler);
-          load(app.src);
+            Bangle.removeListener("drag", dragHandler);
+            load(app.src);
+          }
         }
       }
+
+      positions = [];
     }
-  });
-};
+  };
 
-var debounceTimeoutId;
-var debounce = (delay) => {
-  if (debounceTimeoutId) {
-    clearTimeout(debounceTimeoutId);
-  }
-
-  return new Promise((resolve) => {
-    debounceTimeoutId = setTimeout(() => {
-      debounceTimeoutId = undefined;
-      resolve();
-    }, delay || 500);
-  });
-};
-
-(function () {
   var sui = Bangle.setUI;
   Bangle.setUI = function (mode, cb) {
     sui(mode, cb);
